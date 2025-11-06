@@ -1,4 +1,6 @@
 import './globals.css';
+import Script from 'next/script';
+import ToastHost from '@/components/toast-host';
 
 export const metadata = {
   title: 'Renstrom Chat',
@@ -12,20 +14,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="sv">
-      <head>
+  <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
-        <script
+        <Script
           src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"
-          async
+          strategy="afterInteractive"
         />
       </head>
       <body className="min-h-dvh bg-[#f8f9fa] text-neutral-900" style={{ fontFamily: 'Inter, Roboto, Poppins, ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji' }}>
         {children}
+        {/* Global toast notifications */}
+        <ToastHost />
       </body>
     </html>
   );
