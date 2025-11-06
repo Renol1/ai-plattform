@@ -1,5 +1,6 @@
-'use client';
+ 'use client';
 
+import { useEffect, useState } from 'react';
 import { ChatKit, useChatKit } from '@openai/chatkit-react';
 import { toast } from '@/lib/toast';
 
@@ -7,6 +8,16 @@ import { toast } from '@/lib/toast';
 let chatKitSuccessShown = false;
 
 export default function ChatKitPage() {
+  const [sdkReady, setSdkReady] = useState<boolean>(() =>
+    typeof window !== 'undefined' ? Boolean((window as any).OpenAIChatKit) : false,
+  );
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onLoaded = () => setSdkReady(true);
+    if ((window as any).OpenAIChatKit) setSdkReady(true);
+    window.addEventListener('chatkit:loaded', onLoaded);
+    return () => window.removeEventListener('chatkit:loaded', onLoaded);
+  }, []);
   const { control } = useChatKit({
     api: {
       async getClientSecret(existing) {
@@ -53,7 +64,13 @@ export default function ChatKitPage() {
     <div className="min-h-dvh px-4 pb-12">
       <div className="max-w-[800px] mx-auto mt-8 bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-4">
         <h1 className="text-xl font-semibold text-neutral-900 mb-4">ChatKit</h1>
-        <ChatKit control={control} className="h-[600px] w-full" />
+        {sdkReady ? (
+          <ChatKit control={control} className="h-[600px] w-full" />
+        ) : (
+          <div className="h-[600px] w-full flex items-center justify-center text-neutral-500 text-sm">
+            Laddar ChatKit…
+          </div>
+        )}
       </div>
     </div>
   );

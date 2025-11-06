@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ThemeToggle from '@/components/theme-toggle';
 import {
   deleteAgent,
@@ -16,14 +16,17 @@ import { toast } from '@/lib/toast';
 let chatKitSuccessShown = false;
 
 function EmbeddedChatKit() {
-  // Debug mount/unmount behavior
-  // This helps detect if the component is being unmounted right after mounting
-  // which could indicate state toggling or script conflicts.
-  // Logs only in browser.
-  if (typeof window !== 'undefined') {
-    // eslint-disable-next-line no-console
-    console.debug('[EmbeddedChatKit] render');
-  }
+  const [sdkReady, setSdkReady] = useState<boolean>(() =>
+    typeof window !== 'undefined' ? Boolean((window as any).OpenAIChatKit) : false,
+  );
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onLoaded = () => setSdkReady(true);
+    // In case it was already loaded
+    if ((window as any).OpenAIChatKit) setSdkReady(true);
+    window.addEventListener('chatkit:loaded', onLoaded);
+    return () => window.removeEventListener('chatkit:loaded', onLoaded);
+  }, []);
   const chatKit = useChatKit({
     api: {
       async getClientSecret(currentClientSecret: string | null) {
@@ -69,7 +72,13 @@ function EmbeddedChatKit() {
     <div className="mt-6">
       <h2 className="text-base font-semibold text-neutral-900 mb-2">Inbäddad ChatKit</h2>
       <div className="rounded-xl border border-[#e5e7eb] p-2">
-        <ChatKit control={chatKit.control} className="h-[600px] w-full" />
+        {sdkReady ? (
+          <ChatKit control={chatKit.control} className="h-[600px] w-full" />
+        ) : (
+          <div className="h-[600px] w-full flex items-center justify-center text-neutral-500 text-sm">
+            Laddar ChatKit…
+          </div>
+        )}
       </div>
     </div>
   );
