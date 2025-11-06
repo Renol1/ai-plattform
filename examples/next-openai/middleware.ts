@@ -1,19 +1,20 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Protect Preview deployments with Basic Auth.
+// Protect Preview AND Production deployments with Basic Auth.
 export function middleware(req: NextRequest) {
-  // Only enforce on Vercel Preview deployments
-  if (process.env.VERCEL_ENV !== 'preview') {
+  // Enforce on both preview and production
+  const env = process.env.VERCEL_ENV;
+  if (env !== 'preview' && env !== 'production') {
     return NextResponse.next();
   }
 
   const user = process.env.BASIC_AUTH_USER;
   const pass = process.env.BASIC_AUTH_PASS;
 
-  // If auth is not configured, return a clear error to avoid silently exposing the preview
+  // If auth is not configured, return a clear error to avoid silently exposing the site
   if (!user || !pass) {
-    return new NextResponse('Preview auth not configured. Set BASIC_AUTH_USER and BASIC_AUTH_PASS in Vercel env.', {
+    return new NextResponse('Auth not configured. Set BASIC_AUTH_USER and BASIC_AUTH_PASS in Vercel env (Preview/Production).', {
       status: 500,
     });
   }
