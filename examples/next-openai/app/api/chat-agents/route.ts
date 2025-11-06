@@ -44,7 +44,6 @@ export async function POST(req: Request) {
           modelSettings: {
             reasoning: { effort, summary: 'auto' },
           },
-          store: true,
         });
 
         const runner = new Runner({
