@@ -5,11 +5,27 @@ import ChatInput from '@/components/chat-input';
 import ChatBubble from '@/components/chat-bubble';
 
 export default function Chat() {
-  const { error, status, sendMessage, messages, regenerate, stop } = useChat();
+  const { error, status, sendMessage, messages, regenerate, stop, setMessages, clearError } = useChat();
 
   return (
     <div className="flex w-full flex-1 flex-col">
-      <div className="mx-auto grid w-full max-w-3xl grid-rows-[1fr_auto] gap-4 rounded-2xl bg-white/70 p-4 shadow-sm ring-1 ring-zinc-200 backdrop-blur dark:bg-zinc-950/60 dark:ring-zinc-800 sm:p-6">
+      <div className="mx-auto grid w-full max-w-3xl grid-rows-[auto_1fr_auto] gap-4 rounded-2xl bg-white/70 p-4 shadow-sm ring-1 ring-zinc-200 backdrop-blur dark:bg-zinc-950/60 dark:ring-zinc-800 sm:p-6">
+        <div className="flex items-center justify-between">
+          <div className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Konversation</div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                clearError?.();
+                setMessages([]);
+              }}
+              className="inline-flex h-8 items-center justify-center rounded-lg border border-zinc-200 bg-white px-2.5 text-xs font-medium text-zinc-700 shadow-sm hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              Rensa chat
+            </button>
+          </div>
+        </div>
+
         <div className="flex min-h-[50vh] flex-col gap-3 overflow-y-auto">
           {messages.length === 0 && (
             <div className="mx-auto mt-16 max-w-[28rem] text-center text-sm text-zinc-500">
