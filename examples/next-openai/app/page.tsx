@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import ThemeToggle from '@/components/theme-toggle';
+import CodeLogo from '@/components/code-logo';
 import {
   deleteAgent,
   generateId,
@@ -119,7 +120,9 @@ export default function Dashboard() {
     <div className="min-h-dvh">
       <header className="w-full sticky top-0 z-10 bg-[#f8f9fa]/80 backdrop-blur-sm">
         <div className="max-w-[1100px] mx-auto px-4 py-4 flex items-center justify-between">
-          <a href="/" className="text-xl font-semibold text-neutral-900 select-none">Renstrom</a>
+          <a href="/" className="select-none" aria-label="Hem">
+            <CodeLogo compact />
+          </a>
           <ThemeToggle />
         </div>
       </header>

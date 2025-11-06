@@ -21,6 +21,11 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
+        {/* Orbitron for the code-based logo */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&display=swap"
+          rel="stylesheet"
+        />
       </head>
       <body className="min-h-dvh bg-[#f8f9fa] text-neutral-900" style={{ fontFamily: 'Inter, Roboto, Poppins, ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji' }}>
         {children}
