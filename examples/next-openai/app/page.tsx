@@ -41,7 +41,7 @@ export default function RenstromChat() {
         <div className="max-w-[800px] mx-auto mt-8 bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-8">
           {/* Card header */}
           <div className="flex items-start justify-between mb-6">
-            <h1 className="text-xl font-semibold text-neutral-900">Renstrom Chat</h1>
+            <h1 className="text-xl font-semibold text-neutral-900">Konversation</h1>
             <button
               type="button"
               onClick={clearChat}
@@ -69,7 +69,7 @@ export default function RenstromChat() {
                     className={`max-w-[85%] whitespace-pre-wrap break-words rounded-[12px] px-4 py-2 ${
                       isUser
                         ? 'bg-[#e3f2fd] text-neutral-900'
-                        : 'bg-[#f1f1f1] text-neutral-900'
+                        : 'bg-[#e9ecef] text-neutral-900'
                     }`}
                   >
                     {text}
@@ -100,7 +100,7 @@ export default function RenstromChat() {
               type="button"
               onClick={handleSend}
               disabled={isBusy || !input.trim()}
-              className="h-[48px] px-5 rounded-lg bg-[#1976d2] text-white font-medium hover:bg-[#1565c0] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-[48px] px-5 rounded-lg bg-[#1560A8] text-white font-medium hover:bg-[#104F86] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Skicka
             </button>
@@ -113,7 +113,7 @@ export default function RenstromChat() {
               <button
                 type="button"
                 onClick={stop}
-                className="text-[#1976d2] hover:underline"
+                className="text-[#1560A8] hover:underline"
               >
                 Stoppa
               </button>
