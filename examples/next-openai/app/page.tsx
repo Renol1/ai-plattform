@@ -94,7 +94,7 @@ export default function RenstromChat() {
                 if (e.key === 'Enter') handleSend();
               }}
               disabled={isBusy}
-              className="flex-1 border border-[#dddddd] rounded-lg px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#1976d2]/30"
+              className="flex-1 border border-[#dddddd] rounded-lg px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#1560A8]/30"
             />
             <button
               type="button"
