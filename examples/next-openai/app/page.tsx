@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import ThemeToggle from '@/components/theme-toggle';
 import {
   deleteAgent,
@@ -10,6 +10,31 @@ import {
   saveAgent,
 } from '@/lib/agents-store';
 import { ChatKit, useChatKit } from '@openai/chatkit-react';
+
+function EmbeddedChatKit() {
+  const chatKit = useChatKit({
+    api: {
+      async getClientSecret(currentClientSecret: string | null) {
+        const res = await fetch('/api/chatkit/session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        if (!res.ok) throw new Error('Failed to create ChatKit session');
+        const { client_secret } = await res.json();
+        return client_secret as string;
+      },
+    },
+  });
+
+  return (
+    <div className="mt-6">
+      <h2 className="text-base font-semibold text-neutral-900 mb-2">Inbäddad ChatKit</h2>
+      <div className="rounded-xl border border-[#e5e7eb] p-2">
+        <ChatKit control={chatKit.control} className="h-[600px] w-full" />
+      </div>
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const [agents, setAgents] = useState<RenstromAgent[]>(() => listAgents());
@@ -21,23 +46,7 @@ export default function Dashboard() {
   const [effort, setEffort] = useState<'low' | 'medium' | 'high'>('medium');
   const [showChatKit, setShowChatKit] = useState(false);
 
-  // ChatKit controller (lazy init when toggled on)
-  const chatKit = useMemo(() => {
-    if (!showChatKit) return undefined;
-    return useChatKit({
-      api: {
-        async getClientSecret(currentClientSecret: string | null) {
-          const res = await fetch('/api/chatkit/session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-          });
-          if (!res.ok) throw new Error('Failed to create ChatKit session');
-          const { client_secret } = await res.json();
-          return client_secret as string;
-        },
-      },
-    });
-  }, [showChatKit]);
+  // ChatKit is mounted via <EmbeddedChatKit /> when showChatKit is true
 
   const resetForm = () => {
     setName('');
@@ -122,14 +131,7 @@ export default function Dashboard() {
             </ul>
           )}
 
-          {showChatKit && chatKit && (
-            <div className="mt-6">
-              <h2 className="text-base font-semibold text-neutral-900 mb-2">Inbäddad ChatKit</h2>
-              <div className="rounded-xl border border-[#e5e7eb] p-2">
-                <ChatKit control={chatKit.control} className="h-[600px] w-full" />
-              </div>
-            </div>
-          )}
+          {showChatKit && <EmbeddedChatKit />}
         </div>
 
         {showForm && (
