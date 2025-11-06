@@ -128,6 +128,11 @@ export default function Dashboard() {
       </header>
 
       <main className="px-4 pb-12">
+        {/* Hero logo */}
+        <div className="max-w-[900px] mx-auto mt-8 mb-6 flex items-center justify-center">
+          <CodeLogo />
+        </div>
+
         <div className="max-w-[800px] mx-auto mt-8 bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-8">
           <div className="flex items-start justify-between mb-6">
             <h1 className="text-xl font-semibold text-neutral-900">Välj en agent</h1>
