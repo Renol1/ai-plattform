@@ -1,34 +1,57 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
-import { useChat } from '@ai-sdk/react';
+import { useMemo, useState } from 'react';
 import ThemeToggle from '@/components/theme-toggle';
+import {
+  deleteAgent,
+  generateId,
+  listAgents,
+  RenstromAgent,
+  saveAgent,
+} from '@/lib/agents-store';
 
-export default function RenstromChat() {
-  // Change chat id to clear messages without persisting anything
-  const [chatId, setChatId] = useState(() => Math.random().toString(36).slice(2));
-  const { error, status, sendMessage, messages, stop } = useChat({ id: chatId });
+export default function Dashboard() {
+  const [agents, setAgents] = useState<RenstromAgent[]>(() => listAgents());
+  const [showForm, setShowForm] = useState(false);
+  const [name, setName] = useState('');
+  const [instructions, setInstructions] = useState('');
+  const [model, setModel] = useState('gpt-5');
+  const [workflowId, setWorkflowId] = useState('');
+  const [effort, setEffort] = useState<'low' | 'medium' | 'high'>('medium');
 
-  const [input, setInput] = useState('');
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const isBusy = status === 'submitted' || status === 'streaming';
-
-  const handleSend = () => {
-    const text = input.trim();
-    if (!text || isBusy) return;
-    sendMessage({ text });
-    setInput('');
-    inputRef.current?.focus();
+  const resetForm = () => {
+    setName('');
+    setInstructions('');
+    setModel('gpt-5');
+    setWorkflowId('');
+    setEffort('medium');
   };
 
-  const clearChat = () => {
-    setChatId(Math.random().toString(36).slice(2));
+  const onCreate = () => {
+    if (!name.trim()) return;
+    const agent: RenstromAgent = {
+      id: generateId(),
+      name: name.trim(),
+      instructions: instructions.trim(),
+      model: model || 'gpt-5',
+      workflowId: workflowId || undefined,
+      effort,
+      store: true,
+      createdAt: Date.now(),
+    };
+    saveAgent(agent);
+    setAgents(listAgents());
+    setShowForm(false);
+    resetForm();
+  };
+
+  const onDelete = (id: string) => {
+    deleteAgent(id);
+    setAgents(listAgents());
   };
 
   return (
     <div className="min-h-dvh">
-      {/* Top bar */}
       <header className="w-full sticky top-0 z-10 bg-[#f8f9fa]/80 backdrop-blur-sm">
         <div className="max-w-[1100px] mx-auto px-4 py-4 flex items-center justify-between">
           <a href="/" className="text-xl font-semibold text-neutral-900 select-none">Renstrom</a>
@@ -36,90 +59,82 @@ export default function RenstromChat() {
         </div>
       </header>
 
-      {/* Main content */}
       <main className="px-4 pb-12">
         <div className="max-w-[800px] mx-auto mt-8 bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-8">
-          {/* Card header */}
           <div className="flex items-start justify-between mb-6">
-            <h1 className="text-xl font-semibold text-neutral-900">Konversation</h1>
+            <h1 className="text-xl font-semibold text-neutral-900">Välj en agent</h1>
             <button
               type="button"
-              onClick={clearChat}
-              aria-label="Rensa chat"
-              title="Rensa chat"
-              className="text-neutral-500 hover:text-neutral-700"
+              onClick={() => setShowForm(true)}
+              className="h-10 px-4 rounded-lg bg-[#1560A8] text-white font-medium hover:bg-[#104F86]"
             >
-              🗑️
+              Ny agent
             </button>
           </div>
 
-          {/* Messages */}
-          <div className="space-y-2 mb-6">
-            {messages.length === 0 && (
-              <p className="text-neutral-500 text-sm">Börja konversationen genom att skriva ett meddelande.</p>
-            )}
-            {messages.map(m => {
-              const text = m.parts
-                .map(part => (part.type === 'text' ? part.text : ''))
-                .join('');
-              const isUser = m.role === 'user';
-              return (
-                <div key={m.id} className={`flex w-full ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in-0`}> 
-                  <div
-                    className={`max-w-[85%] whitespace-pre-wrap break-words rounded-[12px] px-4 py-2 ${
-                      isUser
-                        ? 'bg-[#e3f2fd] text-neutral-900'
-                        : 'bg-[#e9ecef] text-neutral-900'
-                    }`}
-                  >
-                    {text}
+          {agents.length === 0 ? (
+            <p className="text-neutral-600">Du har inga agenter ännu. Skapa din första för att komma igång.</p>
+          ) : (
+            <ul className="space-y-3">
+              {agents.map(a => (
+                <li key={a.id} className="border border-[#e5e7eb] rounded-lg p-4 flex items-start justify-between">
+                  <div>
+                    <div className="font-medium text-neutral-900">{a.name}</div>
+                    <div className="text-sm text-neutral-500 line-clamp-1">{(a.instructions || '').split('\n')[0] || '—'}</div>
+                    <div className="text-xs text-neutral-400 mt-1">{a.model.toUpperCase()} · effort: {a.effort}{a.workflowId ? ` · wf: ${a.workflowId}` : ''}</div>
                   </div>
-                </div>
-              );
-            })}
-            {error && (
-              <div className="text-red-600 text-sm">Ett fel inträffade. Försök igen.</div>
-            )}
-          </div>
-
-          {/* Input row */}
-          <div className="flex items-center gap-2">
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Skriv ett meddelande..."
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter') handleSend();
-              }}
-              disabled={isBusy}
-              className="flex-1 border border-[#dddddd] rounded-lg px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#1560A8]/30"
-            />
-            <button
-              type="button"
-              onClick={handleSend}
-              disabled={isBusy || !input.trim()}
-              className="h-[48px] px-5 rounded-lg bg-[#1560A8] text-white font-medium hover:bg-[#104F86] disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Skicka
-            </button>
-          </div>
-
-          {/* Busy controls */}
-          {isBusy && (
-            <div className="mt-3 flex items-center gap-3 text-sm text-neutral-500">
-              <span>Laddar...</span>
-              <button
-                type="button"
-                onClick={stop}
-                className="text-[#1560A8] hover:underline"
-              >
-                Stoppa
-              </button>
-            </div>
+                  <div className="flex items-center gap-2">
+                    <a href={`/chat/${a.id}`} className="px-3 h-9 inline-flex items-center rounded-md bg-[#1560A8] text-white text-sm hover:bg-[#104F86]">Öppna</a>
+                    <button onClick={() => onDelete(a.id)} className="px-3 h-9 inline-flex items-center rounded-md border border-neutral-300 text-neutral-700 text-sm hover:bg-neutral-50">Ta bort</button>
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
+
+        {showForm && (
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="w-full max-w-[640px] bg-white rounded-xl shadow-xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">Ny agent</h2>
+                <button onClick={() => setShowForm(false)} className="text-neutral-500 hover:text-neutral-700">✕</button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm text-neutral-600 mb-1">Namn</label>
+                  <input value={name} onChange={e => setName(e.target.value)} className="w-full border border-[#ddd] rounded-md px-3 py-2" placeholder="t.ex. Mina mejl" />
+                </div>
+                <div>
+                  <label className="block text-sm text-neutral-600 mb-1">Instruktioner</label>
+                  <textarea value={instructions} onChange={e => setInstructions(e.target.value)} className="w-full border border-[#ddd] rounded-md px-3 py-2 min-h-28" placeholder="Beskriv agentens uppgift..." />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm text-neutral-600 mb-1">Modell</label>
+                    <input value={model} onChange={e => setModel(e.target.value)} className="w-full border border-[#ddd] rounded-md px-3 py-2" placeholder="gpt-5" />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-neutral-600 mb-1">Workflow ID (valfritt)</label>
+                    <input value={workflowId} onChange={e => setWorkflowId(e.target.value)} className="w-full border border-[#ddd] rounded-md px-3 py-2" placeholder="ex. my-workflow" />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-neutral-600 mb-1">Effort-level</label>
+                    <select value={effort} onChange={e => setEffort(e.target.value as any)} className="w-full border border-[#ddd] rounded-md px-3 py-2">
+                      <option value="low">low</option>
+                      <option value="medium">medium</option>
+                      <option value="high">high</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-3 mt-6">
+                <button onClick={() => setShowForm(false)} className="px-4 h-10 rounded-md border border-neutral-300 text-neutral-700 hover:bg-neutral-50">Avbryt</button>
+                <button onClick={onCreate} className="px-4 h-10 rounded-md bg-[#1560A8] text-white hover:bg-[#104F86]">Skapa</button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

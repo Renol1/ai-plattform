@@ -9,12 +9,31 @@ import {
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages }: { messages: UIMessage[] } = await req.json();
+  const {
+    messages,
+    model: modelName,
+    instructions,
+    effort,
+    workflowId,
+  }: {
+    messages: UIMessage[];
+    model?: string;
+    instructions?: string;
+    effort?: 'low' | 'medium' | 'high';
+    workflowId?: string;
+  } = await req.json();
 
   const prompt = convertToModelMessages(messages);
 
+  const system = instructions
+    ? `Agent instructions:\n${instructions}\n\n${
+        effort ? `Reasoning effort: ${effort} (summary: auto)` : ''
+      }${workflowId ? `\nWorkflow ID: ${workflowId}` : ''}`
+    : undefined;
+
   const result = streamText({
-    model: openai('gpt-4o'),
+    model: openai(modelName ?? 'gpt-5'),
+    system,
     prompt,
     abortSignal: req.signal,
   });
