@@ -19,6 +19,10 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
+        <script
+          src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"
+          async
+        />
       </head>
       <body className="min-h-dvh bg-[#f8f9fa] text-neutral-900" style={{ fontFamily: 'Inter, Roboto, Poppins, ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji' }}>
         {children}
