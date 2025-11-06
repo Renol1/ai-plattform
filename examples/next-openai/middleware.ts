@@ -21,7 +21,10 @@ export function middleware(req: NextRequest) {
     if (scheme === 'Basic' && encoded) {
       // atob is available in the Edge runtime
       const decoded = atob(encoded);
-      const [u, p] = decoded.split(':');
+      // Support passwords containing ':' by splitting on the first colon only
+      const sep = decoded.indexOf(':');
+      const u = sep >= 0 ? decoded.slice(0, sep) : decoded;
+      const p = sep >= 0 ? decoded.slice(sep + 1) : '';
       if (u === user && p === pass) {
         return NextResponse.next();
       }
