@@ -7,8 +7,14 @@ export function middleware(req: NextRequest) {
   const user = process.env.AUTH_USER;
   const pass = process.env.AUTH_PASS;
 
-  // If credentials are not configured, skip protection (avoids local lockouts)
-  if (!user || !pass) return NextResponse.next();
+  // If credentials are not configured, require auth anyway so it's ALWAYS protected
+  // This will show the browser login prompt; set AUTH_USER/AUTH_PASS in Vercel to gain access.
+  if (!user || !pass) {
+    return new NextResponse('Auth required (configure AUTH_USER/AUTH_PASS)', {
+      status: 401,
+      headers: { 'WWW-Authenticate': 'Basic realm="Protected"' },
+    });
+  }
 
   if (auth) {
     const [scheme, encoded] = auth.split(' ');
