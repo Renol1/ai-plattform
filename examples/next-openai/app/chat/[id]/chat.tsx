@@ -59,6 +59,10 @@ export default function Chat({ id }: { id: string }) {
           </div>
         </header>
         <main className="px-4 pb-12">
+          {/* Hero logo */}
+          <div className="max-w-[900px] mx-auto mt-8 mb-6 flex items-center justify-center">
+            <CodeLogo />
+          </div>
           <div className="max-w-[800px] mx-auto mt-8 bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-8">
             <h1 className="text-xl font-semibold text-neutral-900 mb-2">Kunde inte hitta agenten</h1>
             <p className="text-neutral-600">Agenten finns inte längre. Gå tillbaka till startsidan och välj en annan.</p>
@@ -83,6 +87,10 @@ export default function Chat({ id }: { id: string }) {
 
       {/* Main content */}
       <main className="px-4 pb-12">
+        {/* Hero logo */}
+        <div className="max-w-[900px] mx-auto mt-8 mb-6 flex items-center justify-center">
+          <CodeLogo />
+        </div>
         <div className="max-w-[800px] mx-auto mt-8 bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-8">
           {/* Card header */}
           <div className="flex items-start justify-between mb-6">
