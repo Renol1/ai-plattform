@@ -11,6 +11,7 @@ import {
 } from '@/lib/agents-store';
 import { ChatKit, useChatKit } from '@openai/chatkit-react';
 import { toast } from '@/lib/toast';
+import ErrorBoundary from '@/components/error-boundary';
 
 // Avoid spamming success notifications on refreshes
 let chatKitSuccessShown = false;
@@ -43,6 +44,8 @@ function EmbeddedChatKit() {
             toast('Kunde inte skapa ChatKit-session: svar saknar client_secret', 'error');
             throw new Error('No client_secret in response');
           }
+          // eslint-disable-next-line no-console
+          console.log('[ChatKit] client_secret received');
           if (!chatKitSuccessShown) {
             toast('ChatKit redo', 'success');
             chatKitSuccessShown = true;
@@ -61,7 +64,9 @@ function EmbeddedChatKit() {
     <div className="mt-6">
       <h2 className="text-base font-semibold text-neutral-900 mb-2">Inbäddad ChatKit</h2>
       <div className="rounded-xl border border-[#e5e7eb] p-2">
-        <ChatKit control={chatKit.control} className="h-[600px] w-full" />
+        <ErrorBoundary>
+          <ChatKit control={chatKit.control} className="h-[600px] w-full" />
+        </ErrorBoundary>
       </div>
     </div>
   );

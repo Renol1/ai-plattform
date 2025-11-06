@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ChatKit, useChatKit } from '@openai/chatkit-react';
 import { toast } from '@/lib/toast';
+import ErrorBoundary from '@/components/error-boundary';
 
 // Avoid spamming success notifications on refreshes
 let chatKitSuccessShown = false;
@@ -36,6 +37,8 @@ export default function ChatKitPage() {
             toast('Kunde inte skapa ChatKit-session: svar saknar client_secret', 'error');
             throw new Error('No client_secret in response');
           }
+          // eslint-disable-next-line no-console
+          console.log('[ChatKit] client_secret received');
           if (!chatKitSuccessShown) {
             toast('ChatKit redo', 'success');
             chatKitSuccessShown = true;
@@ -54,7 +57,9 @@ export default function ChatKitPage() {
     <div className="min-h-dvh px-4 pb-12">
       <div className="max-w-[800px] mx-auto mt-8 bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-4">
         <h1 className="text-xl font-semibold text-neutral-900 mb-4">ChatKit</h1>
-        <ChatKit control={control} className="h-[600px] w-full" />
+        <ErrorBoundary>
+          <ChatKit control={control} className="h-[600px] w-full" />
+        </ErrorBoundary>
       </div>
     </div>
   );
