@@ -7,12 +7,14 @@ export const metadata = {
   description: 'A clean, minimal chat UI powered by the AI SDK and Next.js.',
 };
 
+// Fonts from next/font must be initialized at module scope
+const inter = Inter({ subsets: ['latin'] });
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const inter = Inter({ subsets: ['latin'] });
   return (
     <html lang="en">
       <head>
