@@ -1,6 +1,6 @@
 import './globals.css';
 import ToastHost from '@/components/toast-host';
-import Script from 'next/script';
+import ChatKitScriptLoader from '@/components/chatkit-script-loader';
 
 export const metadata = {
   title: 'Renstrom Chat',
@@ -26,16 +26,8 @@ export default function RootLayout({
         {children}
         {/* Global toast notifications */}
         <ToastHost />
-        {/* ChatKit SDK script - load after interactive and notify when ready */}
-        <Script
-          src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"
-          strategy="afterInteractive"
-          onLoad={() => {
-            if (typeof window !== 'undefined') {
-              window.dispatchEvent(new Event('chatkit:loaded'));
-            }
-          }}
-        />
+        {/* ChatKit SDK script (client boundary) */}
+        <ChatKitScriptLoader />
       </body>
     </html>
   );
