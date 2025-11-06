@@ -16,6 +16,14 @@ import { toast } from '@/lib/toast';
 let chatKitSuccessShown = false;
 
 function EmbeddedChatKit() {
+  // Debug mount/unmount behavior
+  // This helps detect if the component is being unmounted right after mounting
+  // which could indicate state toggling or script conflicts.
+  // Logs only in browser.
+  if (typeof window !== 'undefined') {
+    // eslint-disable-next-line no-console
+    console.debug('[EmbeddedChatKit] render');
+  }
   const chatKit = useChatKit({
     api: {
       async getClientSecret(currentClientSecret: string | null) {
