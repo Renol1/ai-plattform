@@ -17,7 +17,7 @@ export default function Chat({ id }: { id: string }) {
   const transport = useMemo(() => {
     if (!agent) return undefined;
     return new DefaultChatTransport({
-      api: '/api/chat-agents',
+      api: '/api/chat',
       body: {
         agentId: agent.id,
         model: agent.model,
