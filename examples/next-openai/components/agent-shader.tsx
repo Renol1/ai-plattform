@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 
 // Simple WebGL fragment shader visualizer for agent flow.
 // Renders 4 nodes in a grid with pulsing glow when active.
-// Props.active: boolean[4] in order [SystemAgent, FoodAgent, TrainerAgent, LouAgent]
+// Props.active: boolean[4] in order [SystemAgent, FoodAgent, TrainerAgent, AnalysisAgent]
 export default function AgentShader({ active, className = '' }: { active: boolean[]; className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const glRef = useRef<WebGLRenderingContext | null>(null);
@@ -35,7 +35,7 @@ export default function AgentShader({ active, className = '' }: { active: boolea
         if (i == 0) return vec2(0.2, 0.7); // System
         if (i == 1) return vec2(0.5, 0.7); // Food
         if (i == 2) return vec2(0.8, 0.7); // Trainer
-        return vec2(0.5, 0.35);           // Lou
+        return vec2(0.5, 0.35);           // Analysis
       }
 
       float glow(vec2 p, vec2 c, float r) {

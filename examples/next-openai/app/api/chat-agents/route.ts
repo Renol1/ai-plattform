@@ -12,7 +12,7 @@ function computeChain(text: string) {
   );
   const chain = ['SystemAgent'];
   if (wantsFood) chain.push('FoodAgent');
-  chain.push('TrainerAgent', 'LouAgent');
+  chain.push('TrainerAgent', 'AnalysisAgent');
   // unique preserve order
   return chain.filter((v, i, a) => a.indexOf(v) === i);
 }

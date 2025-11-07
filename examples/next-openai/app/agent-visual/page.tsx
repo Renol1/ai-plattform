@@ -7,9 +7,9 @@ import CodeLogo from '@/components/code-logo';
 import ThemeToggle from '@/components/theme-toggle';
 import AgentShader from '@/components/agent-shader';
 
-type AgentKey = 'SystemAgent' | 'FoodAgent' | 'TrainerAgent' | 'LouAgent';
+type AgentKey = 'SystemAgent' | 'FoodAgent' | 'TrainerAgent' | 'AnalysisAgent';
 
-const ALL_AGENTS: AgentKey[] = ['SystemAgent', 'FoodAgent', 'TrainerAgent', 'LouAgent'];
+const ALL_AGENTS: AgentKey[] = ['SystemAgent', 'FoodAgent', 'TrainerAgent', 'AnalysisAgent'];
 
 export default function VisualAgentPage() {
   const [input, setInput] = useState('');
@@ -43,9 +43,9 @@ export default function VisualAgentPage() {
     SystemAgent: false,
     FoodAgent: false,
     TrainerAgent: false,
-    LouAgent: false,
+    AnalysisAgent: false,
   });
-  const activeArray = [active.SystemAgent, active.FoodAgent, active.TrainerAgent, active.LouAgent];
+  const activeArray = [active.SystemAgent, active.FoodAgent, active.TrainerAgent, active.AnalysisAgent];
 
   // Determine likely agent chain based on the user prompt
   const computeChain = (text: string): AgentKey[] => {
@@ -53,7 +53,7 @@ export default function VisualAgentPage() {
     const wantsFood = /(protein|kalori|kalor|näring|naring|livsmed|mat|frukost|lunch|middag|ris|gröt|kyckling|kött|bönor|lök)/.test(t);
     const chain: AgentKey[] = ['SystemAgent'];
     if (wantsFood) chain.push('FoodAgent');
-    chain.push('TrainerAgent', 'LouAgent');
+  chain.push('TrainerAgent', 'AnalysisAgent');
     return chain.filter((v, i, a) => a.indexOf(v) === i);
   };
 
@@ -61,7 +61,7 @@ export default function VisualAgentPage() {
   useEffect(() => {
     if (!isBusy && runIdRef.current) {
       // ensure reset when run finishes
-      setActive({ SystemAgent: false, FoodAgent: false, TrainerAgent: false, LouAgent: false });
+  setActive({ SystemAgent: false, FoodAgent: false, TrainerAgent: false, AnalysisAgent: false });
     }
   }, [isBusy]);
 
@@ -75,7 +75,7 @@ export default function VisualAgentPage() {
     try {
       const es = new EventSource(`/api/agent-visual/events?runId=${encodeURIComponent(runId)}`);
       const stopAll = () => {
-        setActive({ SystemAgent: false, FoodAgent: false, TrainerAgent: false, LouAgent: false });
+        setActive({ SystemAgent: false, FoodAgent: false, TrainerAgent: false, AnalysisAgent: false });
         es.close();
       };
       es.addEventListener('agent', (evt: MessageEvent) => {
@@ -85,7 +85,7 @@ export default function VisualAgentPage() {
             SystemAgent: false,
             FoodAgent: false,
             TrainerAgent: false,
-            LouAgent: false,
+            AnalysisAgent: false,
             [data.name]: data.state === 'start',
           }) as Record<AgentKey, boolean>);
         } catch {}
@@ -203,6 +203,7 @@ export default function VisualAgentPage() {
 }
 
 function AgentBox({ name, active }: { name: string; active: boolean }) {
+  const label = name === 'SystemAgent' ? 'System' : name === 'FoodAgent' ? 'Food' : name === 'TrainerAgent' ? 'Trainer' : name === 'AnalysisAgent' ? 'Analysis' : name;
   return (
     <div
       className={`relative rounded-xl p-4 text-center border transition-all duration-300 select-none ${
@@ -214,7 +215,7 @@ function AgentBox({ name, active }: { name: string; active: boolean }) {
       <div
         className={`mx-auto mb-2 h-3 w-3 rounded-full ${active ? 'bg-[#b385ff] animate-pulse' : 'bg-neutral-600'}`}
       />
-      <div className="text-sm font-medium text-white tracking-wide">{name}</div>
+      <div className="text-sm font-medium text-white tracking-wide">{label}</div>
       {active && (
         <div className="absolute -inset-0.5 rounded-xl blur-md pointer-events-none bg-gradient-to-br from-[#7d3fc3]/30 to-transparent" />
       )}
