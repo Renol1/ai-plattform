@@ -168,7 +168,7 @@ export default function Dashboard() {
                     <div className="text-xs text-neutral-400 mt-1">{a.model.toUpperCase()} · effort: {a.effort}{a.workflowId ? ` · wf: ${a.workflowId}` : ''}</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <a href={`/chat/${a.id}`} className="px-3 h-9 inline-flex items-center rounded-md bg-[#1560A8] text-white text-sm hover:bg-[#104F86]">Öppna</a>
+                    <a href={`/chatkit`} className="px-3 h-9 inline-flex items-center rounded-md bg-[#1560A8] text-white text-sm hover:bg-[#104F86]">Öppna widget</a>
                     <button onClick={() => onDelete(a.id)} className="px-3 h-9 inline-flex items-center rounded-md border border-neutral-300 text-neutral-700 text-sm hover:bg-neutral-50">Ta bort</button>
                   </div>
                 </li>
