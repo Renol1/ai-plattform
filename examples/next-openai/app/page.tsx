@@ -148,6 +148,12 @@ export default function Dashboard() {
             >
               {showChatKit ? 'Dölj ChatKit' : 'Visa ChatKit'}
             </button>
+            <a
+              href="/agent-visual"
+              className="h-9 px-3 inline-flex items-center rounded-md bg-[#6a2bb8] text-white text-sm hover:bg-[#5b23a3]"
+            >
+              Utforska visuell agent-vy
+            </a>
           </div>
 
           {agents.length === 0 ? (

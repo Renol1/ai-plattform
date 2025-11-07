@@ -5,6 +5,7 @@ export default function CodeLogo({ compact = false, className = '' }: { compact?
     <div className={`logo-box${compact ? ' compact' : ''} ${className}`} aria-label="RENSTROM – KREATIV INTELLIGENS">
       <h1 className="logo">RENSTROM</h1>
       <p className="tagline">KREATIV INTELLIGENS</p>
+      {/* @ts-expect-error styled-jsx prop is provided by Next.js runtime */}
       <style jsx>{`
         .logo-box {
           display: inline-block;
