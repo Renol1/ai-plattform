@@ -78,7 +78,7 @@ export default function Dashboard() {
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState('');
   const [instructions, setInstructions] = useState('');
-  const [model, setModel] = useState('gpt-5');
+  const [model, setModel] = useState('gpt-4o-mini');
   const [workflowId, setWorkflowId] = useState('');
   const [effort, setEffort] = useState<'low' | 'medium' | 'high'>('medium');
   const [showChatKit, setShowChatKit] = useState(false);
@@ -88,7 +88,7 @@ export default function Dashboard() {
   const resetForm = () => {
     setName('');
     setInstructions('');
-    setModel('gpt-5');
+  setModel('gpt-4o-mini');
     setWorkflowId('');
     setEffort('medium');
   };
