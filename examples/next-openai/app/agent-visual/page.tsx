@@ -130,7 +130,7 @@ export default function VisualAgentPage() {
             {/* Messages */}
             <div className="min-h-[220px] max-h-[420px] overflow-y-auto pr-1 space-y-2 mb-4">
               {messages.length === 0 && (
-                <p className="text-neutral-400 text-sm">Börja med en fråga, t.ex. "Hur mycket protein i kokt ris?"</p>
+                <p className="text-neutral-400 text-sm">Börja med en fråga, t.ex. &quot;Hur mycket protein i kokt ris?&quot;</p>
               )}
               {messages.map(m => {
                 const text = m.parts.map(p => (p.type === 'text' ? p.text : '')).join('');
