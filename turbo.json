@@ -36,6 +36,7 @@
         "NIM_API_KEY",
         "NODE_ENV",
         "OPENAI_API_KEY",
+        "OPENAI_CHATKIT_WORKFLOW_ID",
         "OPENAI_API_BASE",
         "OPENAI_BASE_URL",
         "PERPLEXITY_API_KEY",

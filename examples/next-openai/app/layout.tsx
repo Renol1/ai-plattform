@@ -1,8 +1,10 @@
 import './globals.css';
+import ToastHost from '@/components/toast-host';
+import ChatKitScriptLoader from '@/components/chatkit-script-loader';
 
 export const metadata = {
-  title: 'AI SDK - Next.js OpenAI Examples',
-  description: 'Examples of using the AI SDK with Next.js and OpenAI.',
+  title: 'Renstrom Chat',
+  description: 'En ren och modern chattupplevelse.',
 };
 
 export default function RootLayout({
@@ -11,8 +13,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="sv">
+  <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+          rel="stylesheet"
+        />
+        {/* Orbitron for the code-based logo */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="min-h-dvh bg-[#f8f9fa] text-neutral-900" style={{ fontFamily: 'Inter, Roboto, Poppins, ui-sans-serif, system-ui, -apple-system, Segoe UI, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji' }}>
+        {children}
+        {/* Global toast notifications */}
+        <ToastHost />
+        {/* ChatKit SDK script (client boundary) */}
+        <ChatKitScriptLoader />
+      </body>
     </html>
   );
 }
