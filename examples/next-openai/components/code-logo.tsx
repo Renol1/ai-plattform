@@ -1,12 +1,13 @@
 import React from 'react';
 
 export default function CodeLogo({ compact = false, className = '' }: { compact?: boolean; className?: string }) {
+  // Use styled-jsx without tripping TypeScript's DOM typings for <style jsx>
+  const S: any = 'style';
   return (
     <div className={`logo-box${compact ? ' compact' : ''} ${className}`} aria-label="RENSTROM – KREATIV INTELLIGENS">
       <h1 className="logo">RENSTROM</h1>
       <p className="tagline">KREATIV INTELLIGENS</p>
-      {/* @ts-expect-error styled-jsx prop is provided by Next.js runtime */}
-      <style jsx>{`
+      <S jsx>{`
         .logo-box {
           display: inline-block;
           background: transparent;
@@ -58,7 +59,7 @@ export default function CodeLogo({ compact = false, className = '' }: { compact?
           margin-top: 4px;
           text-shadow: 0 0 5px #9b59b6;
         }
-      `}</style>
+      `}</S>
     </div>
   );
 }
